@@ -90,21 +90,22 @@ def get_todays_unposted_publications(spreadsheet_data, week_day):
 def post_pubs(todays_pubs, spreadsheet_id, sheet):
     now_time = datetime.datetime.now().hour
     for post_vk, post_tg, post_fb, pub_day, pub_time, pub_text, pub_image, was_posted, line_number in todays_pubs:
-        if now_time == pub_time:
-            drive = pass_auth_gdrive()
-            txt_file_name, img_file_name = download_pub_txt_and_img(pub_text, pub_image, drive)
-            if txt_file_name:
-                with open(txt_file_name, 'r', encoding='utf-8') as txt_file:
-                    text = txt_file.read()
-            else:
-                text = None
-            try:
-                if post_vk.lower() == 'да': post_sm.post_vkontakte(img_file_name, text)
-                if post_tg.lower() == 'да': post_sm.post_telegram(img_file_name, text)
-                if post_fb.lower() == 'да': post_sm.post_facebook(img_file_name, text)
-            finally:
-                if img_file_name: os.remove(img_file_name)
-                if txt_file_name: os.remove(txt_file_name)
+        if now_time != pub_time:
+            continue
+        drive = pass_auth_gdrive()
+        txt_file_name, img_file_name = download_pub_txt_and_img(pub_text, pub_image, drive)
+        text = None
+        if txt_file_name:
+            with open(txt_file_name, 'r', encoding='utf-8') as txt_file:
+                text = txt_file.read()
+        
+        try:
+            if post_vk.lower() == 'да': post_sm.post_vkontakte(img_file_name, text)
+            if post_tg.lower() == 'да': post_sm.post_telegram(img_file_name, text)
+            if post_fb.lower() == 'да': post_sm.post_facebook(img_file_name, text)
+        finally:
+            if img_file_name: os.remove(img_file_name)
+            if txt_file_name: os.remove(txt_file_name)
             update_pub_status(spreadsheet_id, line_number, sheet)
 
 def pass_auth_gdrive():
@@ -132,7 +133,6 @@ def get_gdrive_file_id(text):
         parsed = urlparse(urls[0])
         file_id = parsed.query[3:]
         return file_id
-    else: return None
 
 def download_txt_from_gdrive(text_id, drive):
     file_txt = drive.CreateFile({'id': text_id})
