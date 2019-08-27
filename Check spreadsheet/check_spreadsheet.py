@@ -22,14 +22,14 @@ def main():
         time.sleep(300)
 
 def check_spreadsheet(spreadsheet_id, data_range):
-    sheet = customize_spreadshits_api()
+    sheet = authorize_spreadsheets_api()
     spreadsheet_data = download_spreadsheet_data(spreadsheet_id, data_range, sheet)
     week_day = get_todays_week_day()
     todays_pubs = get_todays_unposted_publications(spreadsheet_data, week_day)
     if todays_pubs:
         post_pubs(todays_pubs, spreadsheet_id, sheet)
 
-def customize_spreadshits_api():
+def authorize_spreadsheets_api():
     # Code snippet from: https://developers.google.com/sheets/api/quickstart/python
     # If modifying these scopes, delete the file token.pickle.
     scopes = ['https://www.googleapis.com/auth/spreadsheets']
