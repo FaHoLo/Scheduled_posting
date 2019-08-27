@@ -84,8 +84,7 @@ def get_todays_unposted_publications(spreadsheet_data, week_day):
         pub_day = pub_info[3]
         was_posted = pub_info[7]
         if week_day == pub_day.lower() and was_posted.lower() == 'нет':
-            pub_info.append(line_number)
-            todays_pubs.append(pub_info)
+            todays_pubs.append([*pub_info, line_number])
     return todays_pubs
 
 def post_pubs(todays_pubs, spreadsheet_id, sheet):
