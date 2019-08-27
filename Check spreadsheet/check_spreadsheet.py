@@ -98,11 +98,13 @@ def post_pubs(todays_pubs, spreadsheet_id, sheet):
                     text = txt_file.read()
             else:
                 text = None
-            if post_vk.lower() == 'да': post_sm.post_vkontakte(img_file_name, text)
-            if post_tg.lower() == 'да': post_sm.post_telegram(img_file_name, text)
-            if post_fb.lower() == 'да': post_sm.post_facebook(img_file_name, text)
-            if img_file_name: os.remove(img_file_name)
-            if txt_file_name: os.remove(txt_file_name)
+            try:
+                if post_vk.lower() == 'да': post_sm.post_vkontakte(img_file_name, text)
+                if post_tg.lower() == 'да': post_sm.post_telegram(img_file_name, text)
+                if post_fb.lower() == 'да': post_sm.post_facebook(img_file_name, text)
+            finally:
+                if img_file_name: os.remove(img_file_name)
+                if txt_file_name: os.remove(txt_file_name)
             update_pub_status(spreadsheet_id, line_number, sheet)
 
 def pass_auth_gdrive():
