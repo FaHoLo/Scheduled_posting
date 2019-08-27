@@ -93,7 +93,8 @@ def post_pubs(todays_pubs, spreadsheet_id, sheet):
         if now_time != pub_time:
             continue
         drive = pass_auth_gdrive()
-        txt_file_name, img_file_name = download_pub_txt_and_img(pub_text, pub_image, drive)
+        txt_file_name = download_pub_txt(pub_text, drive)
+        img_file_name = download_pub_img(pub_image, drive)
         text = None
         if txt_file_name:
             with open(txt_file_name, 'r', encoding='utf-8') as txt_file:
@@ -114,18 +115,21 @@ def pass_auth_gdrive():
     drive = GoogleDrive(gauth)
     return drive
 
-def download_pub_txt_and_img(pub_text, pub_image, drive):
+def download_pub_txt(pub_text, drive):
     text_id = get_gdrive_file_id(pub_text)
     if text_id:
         txt_file_name = download_txt_from_gdrive(text_id, drive)
     else:
         txt_file_name = None
+    return txt_file_name
+
+def download_pub_img(pub_image, drive):
     img_id = get_gdrive_file_id(pub_image)
     if img_id:
         img_file_name = download_img_from_gdrive(img_id, drive)
     else:
         img_file_name = None
-    return txt_file_name, img_file_name
+    return img_file_name
 
 def get_gdrive_file_id(text):
     urls = URLExtract().find_urls(text)
