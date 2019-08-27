@@ -88,9 +88,9 @@ def get_todays_unposted_publications(spreadsheet_data, week_day):
     return todays_pubs
 
 def post_pubs(todays_pubs, spreadsheet_id, sheet):
-    now_time = datetime.datetime.now().hour
-    for post_vk, post_tg, post_fb, pub_day, pub_time, pub_text, pub_image, was_posted, line_number in todays_pubs:
-        if now_time != pub_time:
+    now_hour = datetime.datetime.now().hour
+    for post_vk, post_tg, post_fb, pub_day, pub_time_hour, pub_text, pub_image, was_posted, line_number in todays_pubs:
+        if now_hour != pub_time_hour:
             continue
         drive = pass_auth_gdrive()
         txt_file_name = download_pub_txt(pub_text, drive)
