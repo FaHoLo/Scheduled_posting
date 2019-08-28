@@ -24,8 +24,8 @@ def main():
 def check_spreadsheet(spreadsheet_id, data_range):
     sheet = authorize_spreadsheets_api()
     spreadsheet_data = download_spreadsheet_data(spreadsheet_id, data_range, sheet)
-    week_day = get_todays_week_day()
-    todays_pubs = get_todays_unposted_publications(spreadsheet_data, week_day)
+    week_day = get_today_week_day()
+    todays_pubs = get_today_unposted_publications(spreadsheet_data, week_day)
     if todays_pubs:
         post_pubs(todays_pubs, spreadsheet_id, sheet)
 
@@ -63,7 +63,7 @@ def download_spreadsheet_data(spreadsheet_id, data_range, sheet):
     data = result.get('values', [])
     return data
 
-def get_todays_week_day():
+def get_today_week_day():
     week_days = [
         'понедельник',
         'вторник',
@@ -77,7 +77,7 @@ def get_todays_week_day():
     week_day = week_days[today.weekday()]
     return week_day
 
-def get_todays_unposted_publications(spreadsheet_data, week_day):
+def get_today_unposted_publications(spreadsheet_data, week_day):
     todays_pubs = []
     first_line_data_number = 3
     for line_number, pub_info in enumerate(spreadsheet_data, first_line_data_number):
